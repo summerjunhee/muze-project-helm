@@ -170,5 +170,3 @@ clusterAutoscaler:
   clusterName: "prod-eks-cluster"
   image: "registry.k8s.io/autoscaling/cluster-autoscaler"
   imageTag: "v1.32.4"
-image:
-  tag: 669f1

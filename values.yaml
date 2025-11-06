@@ -145,12 +145,12 @@ hpa:
 # ==========================================
 # Cluster Autoscaler 설정 (새로 추가)
 # ==========================================
-clusterAutoscaler:
-  enabled: true
-  clusterName: "my-eks" # 실제 클러스터 이름으로 변경
-  awsIamRoleArn: "arn:aws:iam::620455725858:role/AmazonEKSClusterAutoscalerRole"
-  image: "registry.k8s.io/autoscaling/cluster-autoscaler"
-  imageTag: "v1.28.2"
+#clusterAutoscaler:
+#  enabled: true
+#  clusterName: "my-eks" # 실제 클러스터 이름으로 변경
+#  awsIamRoleArn: "arn:aws:iam::620455725858:role/AmazonEKSClusterAutoscalerRole"
+#  image: "registry.k8s.io/autoscaling/cluster-autoscaler"
+#  imageTag: "v1.28.2"
 # ---------------------------------------
 # 리소스 설정 (prod와 다른 설정으로 변경)
 # ---------------------------------------
@@ -164,9 +164,9 @@ resources:
 # ==========================================
 # Cluster Autoscaler 설정
 # ==========================================
-clusterAutoscaler:
-  enabled: true
-  serviceAccountName: "cluster-autoscaler"
-  clusterName: "prod-eks-cluster"
-  image: "registry.k8s.io/autoscaling/cluster-autoscaler"
-  imageTag: "v1.32.4"
+#clusterAutoscaler:
+#  enabled: true
+#  serviceAccountName: "cluster-autoscaler"
+#  clusterName: "prod-eks-cluster"
+#  image: "registry.k8s.io/autoscaling/cluster-autoscaler"
+#  imageTag: "v1.32.4"

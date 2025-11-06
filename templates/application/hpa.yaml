@@ -29,4 +29,3 @@ spec:
         averageUtilization: {{ .Values.hpa.targetMemoryUtilizationPercentage }}
   {{- end }}
 {{- end }}
-

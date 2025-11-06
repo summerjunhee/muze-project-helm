@@ -4,10 +4,12 @@
 global:
   environment: prod # 네임스페이스 이름으로 쓰려던 값
   project: muze
+
 # Namespace 설정
 namespace:
   name: web
   create: false
+
 # ALB Controller 설정
 albController:
   enabled: true
@@ -15,6 +17,7 @@ albController:
     name: aws-load-balancer-controller
     namespace: kube-system
     roleArn: arn:aws:iam::620455725858:role/AmazonEKSLoadBalancerControllerRole
+
 # Application 설정
 application:
   name: muze-web
@@ -31,12 +34,13 @@ application:
     enabled: true # Deployment.yaml에서 if문에 걸림
     name: muze-web-sa # 실제 존재하거나 Helm이 만들 SA 이름
     create: false # IRSA면 false (이미 존재)
-# Service 설정
+
+# Service 설정 - ClusterIP + IP 모드로 변경
 service:
-  type: NodePort
+  type: ClusterIP
   port: 80
   targetPort: 8000
-  nodePort: 30080
+
 # Health Check 추가
 livenessProbe:
   enabled: true
@@ -45,6 +49,7 @@ livenessProbe:
   periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 3
+
 readinessProbe:
   enabled: true
   path: /
@@ -52,6 +57,7 @@ readinessProbe:
   periodSeconds: 5
   timeoutSeconds: 3
   failureThreshold: 3
+
 # ---------------------------------------
 # Ingress (prod에만 적용)
 # ---------------------------------------
@@ -60,7 +66,7 @@ ingress:
   className: alb
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/target-type: ip  # instance에서 ip로 변경
     alb.ingress.kubernetes.io/load-balancer-name: muze-prod-alb
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-redirect: '443'
@@ -75,6 +81,7 @@ ingress:
   externalDns:
     enabled: true
     hostname: www.muz-e.com
+
 # External Services 설정 (prod 환경에만 적용)
 externalServices:
   rds:
@@ -89,6 +96,7 @@ externalServices:
     enabled: true
     name: redis-service-prod
     externalName: muze-redis.kj5slr.ng.0001.apn2.cache.amazonaws.com
+
 # External Secrets 설정 (prod 환경에만 적용)
 externalSecrets:
   enabled: true # ⬅️ 새로 추가: External Secrets 사용 여부
@@ -134,6 +142,7 @@ externalSecrets:
       - secretKey: AWS_REGION
         remoteRef:
           key: /muze/prod/AWS_REGION
+
 # ==========================================
 # HPA 설정 (새로 추가)
 # ==========================================
@@ -143,15 +152,7 @@ hpa:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
-# ==========================================
-# Cluster Autoscaler 설정 (새로 추가)
-# ==========================================
-#clusterAutoscaler:
-#  enabled: true
-#  clusterName: "my-eks" # 실제 클러스터 이름으로 변경
-#  awsIamRoleArn: "arn:aws:iam::620455725858:role/AmazonEKSClusterAutoscalerRole"
-#  image: "registry.k8s.io/autoscaling/cluster-autoscaler"
-#  imageTag: "v1.28.2"
+
 # ---------------------------------------
 # 리소스 설정 (prod와 다른 설정으로 변경)
 # ---------------------------------------
@@ -162,12 +163,3 @@ resources:
   requests:
     memory: 512Mi
     cpu: 500m
-# ==========================================
-# Cluster Autoscaler 설정
-# ==========================================
-#clusterAutoscaler:
-#  enabled: true
-#  serviceAccountName: "cluster-autoscaler"
-#  clusterName: "prod-eks-cluster"
-#  image: "registry.k8s.io/autoscaling/cluster-autoscaler"
-#  imageTag: "v1.32.4"

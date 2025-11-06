@@ -49,7 +49,7 @@ service:
 # Health Check 추가
 livenessProbe:
   enabled: true
-  path: /health
+  path: /
   initialDelaySeconds: 30
   periodSeconds: 10
   timeoutSeconds: 5
@@ -57,7 +57,7 @@ livenessProbe:
   
 readinessProbe:
   enabled: true
-  path: /health
+  path: /
   initialDelaySeconds: 10
   periodSeconds: 5
   timeoutSeconds: 3

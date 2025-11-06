@@ -28,4 +28,25 @@ spec:
         type: Utilization
         averageUtilization: {{ .Values.hpa.targetMemoryUtilizationPercentage }}
   {{- end }}
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: {{ .Values.hpa.scaleDownStabilizationWindowSeconds | default 60 }}
+      policies:
+      - type: Percent
+        value: {{ .Values.hpa.scaleDownPercentage | default 50 }}
+        periodSeconds: {{ .Values.hpa.scaleDownPeriodSeconds | default 60 }}
+      - type: Pods
+        value: {{ .Values.hpa.scaleDownPods | default 1 }}
+        periodSeconds: {{ .Values.hpa.scaleDownPeriodSeconds | default 60 }}
+      selectPolicy: Max
+    scaleUp:
+      stabilizationWindowSeconds: {{ .Values.hpa.scaleUpStabilizationWindowSeconds | default 0 }}
+      policies:
+      - type: Percent
+        value: {{ .Values.hpa.scaleUpPercentage | default 100 }}
+        periodSeconds: {{ .Values.hpa.scaleUpPeriodSeconds | default 15 }}
+      - type: Pods
+        value: {{ .Values.hpa.scaleUpPods | default 2 }}
+        periodSeconds: {{ .Values.hpa.scaleUpPeriodSeconds | default 15 }}
+      selectPolicy: Max
 {{- end }}
